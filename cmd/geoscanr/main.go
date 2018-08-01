@@ -1,7 +1,9 @@
 package main
 
 import (
+	"bytes"
 	"crypto/sha1"
+	"encoding/json"
 	"encoding/xml"
 	"flag"
 	"fmt"
@@ -12,6 +14,8 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/PuerkitoBio/goquery"
 )
 
 // URLSet was generated 2018-08-01 15:01:03 by tir on sol.
@@ -116,5 +120,23 @@ func main() {
 			log.Fatal(err)
 		}
 		log.Printf("[%d] %s", len(data), u.Loc.Text)
+		doc, err := goquery.NewDocumentFromReader(bytes.NewReader(data))
+		if err != nil {
+			log.Fatal(err)
+		}
+		m := make(map[string]string)
+		doc.Find("tr").Each(func(_ int, s *goquery.Selection) {
+			k, v := strings.TrimSpace(s.Find("th").Text()), strings.TrimSpace(s.Find("td").Text())
+			if k == "" {
+				return
+			}
+			m[k] = v
+		})
+		b, err := json.Marshal(m)
+		if err != nil {
+			log.Fatal(err)
+		}
+		fmt.Println(string(b))
+		break
 	}
 }
