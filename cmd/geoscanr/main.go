@@ -133,6 +133,7 @@ func main() {
 			if k == "Download" {
 				v = s.Find(`td > a`).AttrOr("href", "")
 			}
+			// XXX: Collect multiple "Links", including "title".
 			m[k] = v
 		})
 		b, err := json.Marshal(m)
