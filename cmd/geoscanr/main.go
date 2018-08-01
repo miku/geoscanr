@@ -134,6 +134,8 @@ func main() {
 				v = s.Find(`td > a`).AttrOr("href", "")
 			}
 			// XXX: Collect multiple "Links", including "title".
+			// XXX: Maybe extract DOI on the go.
+			// XXX: Sometimes an image is linked.
 			m[k] = v
 		})
 		b, err := json.Marshal(m)
