@@ -130,6 +130,9 @@ func main() {
 			if k == "" {
 				return
 			}
+			if k == "Download" {
+				v = s.Find(`td > a`).AttrOr("href", "")
+			}
 			m[k] = v
 		})
 		b, err := json.Marshal(m)
