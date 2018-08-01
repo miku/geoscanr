@@ -10,12 +10,12 @@ import (
 	"io"
 	"io/ioutil"
 	"log"
-	"net/http"
 	"os"
 	"path/filepath"
 	"strings"
 
 	"github.com/PuerkitoBio/goquery"
+	"github.com/sethgrid/pester"
 )
 
 // URLSet was generated 2018-08-01 15:01:03 by tir on sol.
@@ -57,7 +57,7 @@ func fetch(link string) ([]byte, error) {
 				return nil, err
 			}
 		}
-		resp, err := http.Get(link)
+		resp, err := pester.Get(link)
 		if err != nil {
 			return nil, err
 		}
@@ -89,7 +89,7 @@ func main() {
 	var r io.Reader
 
 	if strings.HasPrefix(*sitemap, "http") {
-		resp, err := http.Get(*sitemap)
+		resp, err := pester.Get(*sitemap)
 		if err != nil {
 			log.Fatal(err)
 		}
