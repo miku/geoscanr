@@ -39,7 +39,7 @@ type URLSet struct {
 var (
 	sitemap  = flag.String("sitemap", "https://geoscan.nrcan.gc.ca/googlesitemapGCxml.xml", "file or link to sitemap")
 	cacheDir = flag.String("cachedir", filepath.Join(".", ".geoscanr"), "cache for page downloads")
-	quite    = flag.String("q", false, "suppress logging output")
+	quiet    = flag.Bool("q", false, "suppress logging output")
 )
 
 // stringSum returns hexdigest of given string.
@@ -88,7 +88,7 @@ func fetch(link string) ([]byte, error) {
 func main() {
 	flag.Parse()
 
-	if *quite {
+	if *quiet {
 		log.SetOutput(ioutil.Discard)
 	}
 
@@ -130,20 +130,48 @@ func main() {
 		if err != nil {
 			log.Fatal(err)
 		}
-		m := make(map[string]string)
+
+		m := make(map[string]interface{})
+		var links []struct {
+			URL   string
+			Title string
+		}
+		var related []string
+		var programs []string
+
 		doc.Find("tr").Each(func(_ int, s *goquery.Selection) {
-			k, v := strings.TrimSpace(s.Find("th").Text()), strings.TrimSpace(s.Find("td").Text())
-			if k == "" {
+			k := strings.TrimSpace(s.Find("th").Text())
+			switch {
+			case k == "":
 				return
+			case k == "Download":
+				m[k] = s.Find(`td > a`).AttrOr("href", "")
+			case k == "Links":
+				links = append(links, struct {
+					URL   string
+					Title string
+				}{
+					s.Find("td > a").AttrOr("href", ""),
+					s.Find("td > a").AttrOr("title", ""),
+				})
+			case k == "Related":
+				link := s.Find("td > a").AttrOr("href", "")
+				text := s.Find("td").Text()
+				related = append(related, strings.TrimSpace(fmt.Sprintf("%s -- %s", text, link)))
+			case k == "Program":
+				link := s.Find("td > a").AttrOr("href", "")
+				text := s.Find("td").Text()
+				programs = append(programs, strings.TrimSpace(fmt.Sprintf("%s -- %s", text, link)))
+			default:
+				m[k] = strings.TrimSpace(s.Find("td").Text())
 			}
-			if k == "Download" {
-				v = s.Find(`td > a`).AttrOr("href", "")
-			}
-			// XXX: Collect multiple "Links", including "title".
 			// XXX: Maybe extract DOI on the go.
 			// XXX: Sometimes an image is linked.
-			m[k] = v
 		})
+		m["Links"] = links
+		if len(related) > 0 {
+			m["Related"] = related
+		}
 		b, err := json.Marshal(m)
 		if err != nil {
 			log.Fatal(err)
