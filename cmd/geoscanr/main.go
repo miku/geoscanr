@@ -39,8 +39,10 @@ type URLSet struct {
 var (
 	sitemap  = flag.String("sitemap", "https://geoscan.nrcan.gc.ca/googlesitemapGCxml.xml", "file or link to sitemap")
 	cacheDir = flag.String("cachedir", filepath.Join(".", ".geoscanr"), "cache for page downloads")
+	quite    = flag.String("q", false, "suppress logging output")
 )
 
+// stringSum returns hexdigest of given string.
 func stringSum(s string) string {
 	h := sha1.New()
 	io.WriteString(h, s)
@@ -85,6 +87,10 @@ func fetch(link string) ([]byte, error) {
 
 func main() {
 	flag.Parse()
+
+	if *quite {
+		log.SetOutput(ioutil.Discard)
+	}
 
 	var r io.Reader
 
