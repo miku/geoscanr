@@ -157,11 +157,11 @@ func main() {
 			case k == "Related":
 				link := s.Find("td > a").AttrOr("href", "")
 				text := s.Find("td").Text()
-				related = append(related, strings.TrimSpace(fmt.Sprintf("%s -- %s", text, link)))
+				related = append(related, strings.TrimSpace(fmt.Sprintf("%s %s", text, link)))
 			case k == "Program":
 				link := s.Find("td > a").AttrOr("href", "")
 				text := s.Find("td").Text()
-				programs = append(programs, strings.TrimSpace(fmt.Sprintf("%s -- %s", text, link)))
+				programs = append(programs, strings.TrimSpace(fmt.Sprintf("%s %s", text, link)))
 			default:
 				m[k] = strings.TrimSpace(s.Find("td").Text())
 			}
@@ -171,6 +171,9 @@ func main() {
 		m["Links"] = links
 		if len(related) > 0 {
 			m["Related"] = related
+		}
+		if len(programs) > 0 {
+			m["Program"] = programs
 		}
 		b, err := json.Marshal(m)
 		if err != nil {
