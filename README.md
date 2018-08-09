@@ -17,13 +17,17 @@ $ geoscanr -h
   -q    suppress logging output
   -sitemap string
         file or link to sitemap (default "https://geoscan.nrcan.gc.ca/googlesitemapGCxml.xml")
+```
 
+Tool should work out of the box, as long as sitemap and site structure remain unchanged.
+
+```json
 $ geoscanr | head -1 | jq .
 {
   "Area": "Point Alexander; Renfrew County; Pontiac County; Nipissing District",
-  "Author": "Canada Surveys and Mapping Branch, Topographical Survey / Direction canadienne des levés et de la cartographie, levés topographiques",
+  "Author": "Canada Surveys and Mapping Branch, Topographical Survey / ... la cartographie, levés ...",
   "Document": "serial",
-  "Download": "https://geoscan.nrcan.gc.ca/starweb/geoscan/servlet.starweb?path=geoscan/downloade.web&search1=R=123354",
+  "Download": "https://geoscan.nrcan.gc.ca/starweb/geoscan/servlet.starweb?path=...",
   "Edition": "provisional/provisoire, black & white / noir et blanc",
   "File format": "pdf (Adobe® Reader®); JPEG2000",
   "GEOSCAN ID": "123354",
@@ -38,10 +42,10 @@ $ geoscanr | head -1 | jq .
   "NTS": "31K/04NE; 31K/04SE",
   "Province": "Quebec; Ontario",
   "Related": [
-    "This publication supercedes Canada Bureau of Geology and\nTopography, Topographical Survey; (1942). ...""
+    "This publication supercedes Canada Bureau of Geology and\nTopography, ...
   ],
   "Released": "1956 01 01",
-  "Source": "Geological Survey of Canada, \"A\" Series Map 701A,   1946,  1 sheet, https://doi.org/10.4095/123354",
+  "Source": "Geological Survey of Canada, \"A\" Series Map ... https://doi.org/10.4095/123354",
   "Subjects": "miscellaneous; topography; triangulation stations; hydrography; streams; marshes; reefs",
   "Title": "Point Alexander, Nipissing District, Renfrew and Pontiac counties, Ontario and Québec",
   "Year": "1946"
