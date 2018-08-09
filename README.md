@@ -51,3 +51,5 @@ $ geoscanr | head -1 | jq .
   "Year": "1946"
 }
 ```
+
+First harvest found [13312 records](https://github.com/miku/geoscanr/blob/4f07beef603a0d1e8a340174277f4e3bb21465f9/geoscan.jsonl.gz).
