@@ -1,12 +1,12 @@
 # geoscanr
 
-A custom fetcher for geoscan data.
+A custom fetcher for geoscan data, refs #9871.
 
 * [x] fetch sitemap (https://geoscan.nrcan.gc.ca/googlesitemapGCxml.xml)
 * [x] fetch all links, extract data
 * [x] cache html locally
+* [x] create complete set in a single file
 * [ ] fetch linked assets, maybe
-* [ ] create complete set in a single file
 
 We do not need incremental updates, because we can use RSS for that.
 
